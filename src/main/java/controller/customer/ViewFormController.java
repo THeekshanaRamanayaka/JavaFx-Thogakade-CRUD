@@ -75,7 +75,7 @@ public class ViewFormController implements Initializable {
     @FXML
     private JFXTextField txtSalary;
 
-    CustomerService service = new CustomerController();
+    CustomerService service = CustomerController.getInstance();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -124,9 +124,9 @@ public class ViewFormController implements Initializable {
                 txtId.getText(),
                 cmbTitle.getValue(),
                 txtName.getText(),
-                txtAddress.getText(),
                 dateDob.getValue(),
                 Double.parseDouble(txtSalary.getText()),
+                txtAddress.getText(),
                 txtCity.getText(),txtProvince.getText(),
                 txtPostalCode.getText()
         );

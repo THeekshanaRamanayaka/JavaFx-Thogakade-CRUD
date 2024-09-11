@@ -9,4 +9,5 @@ public interface ItemService {
     ObservableList<Item> getAll();
     boolean updateItem(Item item);
     Item searchItem(String itemCode);
+    ObservableList<String> getItemCodes();
 }

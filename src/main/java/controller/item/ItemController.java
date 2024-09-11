@@ -11,6 +11,12 @@ import java.sql.SQLException;
 
 public class ItemController implements ItemService {
 
+    private static ItemController instance;
+    private ItemController() {}
+    public static ItemController getInstance() {
+        return instance == null ? instance = new ItemController() : instance;
+    }
+
     @Override
     public boolean addItem(Item item) {
         String SQL ="INSERT INTO Item VALUES(?,?,?,?,?)";
@@ -93,5 +99,15 @@ public class ItemController implements ItemService {
             throw new RuntimeException(e);
         }
         return null;
+    }
+
+    @Override
+    public ObservableList<String> getItemCodes() {
+        ObservableList<String> itemCodes = FXCollections.observableArrayList();
+        ObservableList<Item> itemObservableList = getAll();
+        itemObservableList.forEach(item -> {
+            itemCodes.add(item.getItemCode());
+        });
+        return itemCodes;
     }
 }

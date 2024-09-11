@@ -8,5 +8,6 @@ public interface CustomerService {
     boolean deleteCustomer(String id);
     ObservableList<Customer> getAll();
     boolean updateCustomer(Customer customer);
-    Customer searchCustomer(String name);
+    Customer searchCustomer(String id);
+    ObservableList<String> getCustomerIds();
 }

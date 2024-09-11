@@ -2,15 +2,24 @@ package controller.order;
 
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import controller.customer.CustomerController;
+import controller.item.ItemController;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
+import model.CartTM;
+import model.Customer;
+import model.Item;
 
 import java.net.URL;
 import java.text.SimpleDateFormat;
@@ -21,10 +30,10 @@ import java.util.ResourceBundle;
 public class PlaceOrderFormController implements Initializable {
 
     @FXML
-    private JFXComboBox<?> cmbCustomerID;
+    private JFXComboBox<String> cmbCustomerID;
 
     @FXML
-    private JFXComboBox<?> cmbItemCode;
+    private JFXComboBox<String> cmbItemCode;
 
     @FXML
     private TableColumn<?, ?> colItemCode;
@@ -45,13 +54,16 @@ public class PlaceOrderFormController implements Initializable {
     private Label lblDate;
 
     @FXML
+    private Label lblNetTotal;
+
+    @FXML
     private Label lblOrderID;
 
     @FXML
     private Label lblTime;
 
     @FXML
-    private TableView<?> tblAddToCart;
+    private TableView<CartTM> tblAddToCart;
 
     @FXML
     private JFXTextField txtCustomerAddress;
@@ -71,9 +83,24 @@ public class PlaceOrderFormController implements Initializable {
     @FXML
     private JFXTextField txtItemUnitPrice;
 
+    ObservableList<CartTM> cartTM = FXCollections.observableArrayList();
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         loadDateAndTime();
+        loadCustomerIds();
+        loadItemCodes();
+
+        cmbCustomerID.getSelectionModel().selectedItemProperty().addListener((observableValue, s, newVal) -> {
+            if (newVal != null) {
+                searchCustomer(newVal);
+            }
+        });
+        cmbItemCode.getSelectionModel().selectedItemProperty().addListener((observableValue, s, t1) -> {
+            if (t1 != null) {
+                searchItem(t1);
+            }
+        });
     }
 
     private void loadDateAndTime() {
@@ -93,9 +120,57 @@ public class PlaceOrderFormController implements Initializable {
         timeline.play();
     }
 
+    private void loadCustomerIds() {
+        cmbCustomerID.setItems(CustomerController.getInstance().getCustomerIds());
+    }
+
+    private void searchCustomer(String customerID) {
+        Customer customer = CustomerController.getInstance().searchCustomer(customerID);
+        txtCustomerName.setText(customer.getName());
+        txtCustomerAddress.setText(customer.getAddress());
+    }
+
+    private void loadItemCodes() {
+        cmbItemCode.setItems(ItemController.getInstance().getItemCodes());
+    }
+
+    private void searchItem(String itemCode) {
+        Item item = ItemController.getInstance().searchItem(itemCode);
+        txtItemDescription.setText(item.getDescription());
+        txtItemStock.setText(item.getQtyOnHand());
+        txtItemUnitPrice.setText(String.valueOf(item.getUnitPrice()));
+    }
+
     @FXML
     void btnAddToCartOnAction() {
+        colItemCode.setCellValueFactory(new PropertyValueFactory<>("itemCode"));
+        colItemDescription.setCellValueFactory(new PropertyValueFactory<>("description"));
+        colQty.setCellValueFactory(new PropertyValueFactory<>("qty"));
+        colUnitPrice.setCellValueFactory(new PropertyValueFactory<>("unitPrice"));
+        colTotal.setCellValueFactory(new PropertyValueFactory<>("total"));
 
+        String itemCode = cmbItemCode.getValue();
+        String description = txtItemDescription.getText();
+        Integer qty = Integer.parseInt(txtItemQty.getText());
+        Double unitPrice = Double.parseDouble(txtItemUnitPrice.getText());
+        Double total = unitPrice*qty;
+
+        if (Integer.parseInt(txtItemStock.getText()) < qty) {
+            new Alert(Alert.AlertType.ERROR,"Invalid Qty");
+        }else{
+            cartTM.add(new CartTM(itemCode, description, qty, unitPrice, total));
+            getNetTotal();
+        }
+        tblAddToCart.setItems(cartTM);
+    }
+
+    private void getNetTotal() {
+        Double total = 0.0;
+
+        for (CartTM cartTM1 : cartTM) {
+            total+= cartTM1.getTotal();
+        }
+        lblNetTotal.setText(String.valueOf(total));
     }
 
     @FXML
