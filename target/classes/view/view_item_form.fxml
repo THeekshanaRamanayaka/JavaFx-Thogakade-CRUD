@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="566.0" prefWidth="701.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.item.ItemViewFormController">
+   <children>
+      <TableView fx:id="tblViewItemForm" layoutX="26.0" layoutY="207.0" prefHeight="306.0" prefWidth="649.0">
+        <columns>
+          <TableColumn fx:id="colItemCode" prefWidth="75.0" text="ItemCode" />
+          <TableColumn fx:id="colDescription" prefWidth="206.0" text="Description" />
+            <TableColumn fx:id="colPackSize" prefWidth="110.0" text="PackSize" />
+            <TableColumn fx:id="colUnitPrice" prefWidth="140.0" text="UnitPrice" />
+            <TableColumn fx:id="colQtyOnHand" prefWidth="117.0" text="QtyOnHand" />
+        </columns>
+      </TableView>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="81.0" stroke="BLACK" strokeType="INSIDE" width="701.0" />
+      <Label layoutX="234.0" layoutY="19.0" text="View Item Form" textFill="WHITE">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <JFXTextField fx:id="txtItemCode" layoutX="23.0" layoutY="106.0" promptText="ItemCode" />
+      <JFXTextField fx:id="txtQtyOnHand" layoutX="23.0" layoutY="151.0" promptText="QtyOnHand" />
+      <JFXTextField fx:id="txtUnitPrice" layoutX="533.0" layoutY="106.0" promptText="UnitPrice" />
+      <JFXTextField fx:id="txtPackSize" layoutX="363.0" layoutY="106.0" promptText="PackSize" />
+      <JFXTextField fx:id="txtDescription" layoutX="193.0" layoutY="106.0" promptText="Description" />
+      <JFXButton layoutX="404.0" layoutY="164.0" onAction="#btnAddOnAction" prefHeight="26.0" prefWidth="58.0" style="-fx-background-color: #44bd32;" text="Add" textFill="WHITE" />
+      <JFXButton layoutX="475.0" layoutY="164.0" onAction="#btnUpdateOnAction" prefHeight="26.0" prefWidth="58.0" style="-fx-background-color: #00a8ff;" text="Update" textFill="WHITE" />
+      <JFXButton layoutX="546.0" layoutY="164.0" onAction="#btnSearchOnAction" prefHeight="26.0" prefWidth="58.0" style="-fx-background-color: #273c75;" text="Search" textFill="WHITE" />
+      <JFXButton layoutX="617.0" layoutY="164.0" onAction="#btnDeleteOnAction" prefHeight="26.0" prefWidth="58.0" style="-fx-background-color: #e84118;" text="Delete" textFill="WHITE" />
+      <JFXButton layoutX="309.0" layoutY="526.0" onAction="#btnReloadOnAction" prefHeight="26.0" prefWidth="58.0" style="-fx-background-color: #fbc531;" text="Relload" />
+   </children>
+</AnchorPane>

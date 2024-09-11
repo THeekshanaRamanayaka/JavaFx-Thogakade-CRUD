@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="568.0" prefWidth="732.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.customer.ViewFormController">
+   <children>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#1e008f" height="78.0" stroke="BLACK" strokeType="INSIDE" width="732.0" />
+      <Label layoutX="247.0" layoutY="17.0" text="Customer Form" textFill="WHITE">
+         <font>
+            <Font name="System Italic" size="36.0" />
+         </font>
+      </Label>
+      <JFXTextField fx:id="txtId" layoutX="97.0" layoutY="103.0" text="Id" />
+      <JFXTextField fx:id="txtName" layoutX="97.0" layoutY="195.0" text="Name" />
+      <JFXComboBox fx:id="cmbTitle" layoutX="97.0" layoutY="149.0" prefHeight="26.0" prefWidth="145.0" promptText="Title" />
+      <Line endX="-100.00001525878906" endY="96.19882202148438" layoutX="367.0" layoutY="127.0" startX="-100.00001525878906" startY="-24.64708709716797" stroke="#838383" />
+      <JFXTextField fx:id="txtAddress" layoutX="290.0" layoutY="103.0" text="Address" />
+      <Line endX="-100.00001525878906" endY="96.19882202148438" layoutX="562.0" layoutY="126.0" startX="-100.00001525878906" startY="-24.64708709716797" stroke="#838383" />
+      <DatePicker fx:id="dateDob" layoutX="290.0" layoutY="150.0" prefHeight="26.0" prefWidth="145.0" />
+      <JFXTextField fx:id="txtSalary" layoutX="290.0" layoutY="195.0" text="Salary" />
+      <JFXTextField fx:id="txtCity" layoutX="486.0" layoutY="103.0" text="City" />
+      <JFXTextField fx:id="txtProvince" layoutX="486.0" layoutY="149.0" text="Province" />
+      <JFXTextField fx:id="txtPostalCode" layoutX="486.0" layoutY="195.0" text="Postal Code" />
+      <TableView fx:id="tblResult" layoutX="26.0" layoutY="289.0" prefHeight="212.0" prefWidth="676.0">
+        <columns>
+          <TableColumn fx:id="colId" prefWidth="75.0" text="Id" />
+          <TableColumn fx:id="colTitle" prefWidth="75.0" text="Title" />
+            <TableColumn fx:id="colName" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="colAddress" prefWidth="75.0" text="Address" />
+            <TableColumn fx:id="colDOB" prefWidth="75.0" text="DOB" />
+            <TableColumn fx:id="colSalary" prefWidth="75.0" text="Salary" />
+            <TableColumn fx:id="colCity" prefWidth="75.0" text="City" />
+            <TableColumn fx:id="colProvince" prefWidth="75.0" text="Province" />
+            <TableColumn fx:id="colPostalCode" prefWidth="75.0" text="Postal Code" />
+        </columns>
+      </TableView>
+      <JFXButton layoutX="399.0" layoutY="241.0" onAction="#btnAddOnAction" prefHeight="26.0" prefWidth="58.0" style="-fx-background-color: #44bd32;" text="Add" textFill="WHITE" />
+      <JFXButton layoutX="470.0" layoutY="241.0" onAction="#btnUpdateOnAction" prefHeight="26.0" prefWidth="58.0" style="-fx-background-color: #00a8ff;" text="Update" textFill="WHITE" />
+      <JFXButton layoutX="541.0" layoutY="241.0" onAction="#btnSearchOnAction" prefHeight="26.0" prefWidth="58.0" style="-fx-background-color: #273c75;" text="Search" textFill="WHITE" />
+      <JFXButton layoutX="612.0" layoutY="241.0" onAction="#btnDeleteOnAction" prefHeight="26.0" prefWidth="58.0" style="-fx-background-color: #e84118;" text="Delete" textFill="WHITE" />
+      <JFXButton layoutX="644.0" layoutY="516.0" onAction="#btnReloadOnAction" prefHeight="26.0" prefWidth="58.0" style="-fx-background-color: #fbc531;" text="Relload" />
+   </children>
+</AnchorPane>
