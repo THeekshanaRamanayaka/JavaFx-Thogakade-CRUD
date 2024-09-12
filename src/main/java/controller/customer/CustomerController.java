@@ -1,6 +1,5 @@
 package controller.customer;
 
-import db.DBConnection;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
@@ -19,20 +18,19 @@ public class CustomerController implements CustomerService {
 
     @Override
     public boolean addCustomer(Customer customer) {
+        String SQL ="INSERT INTO Customer VALUES(?,?,?,?,?,?,?,?,?)";
         try {
-            String SQL ="INSERT INTO Customer VALUES(?,?,?,?,?,?,?,?,?)";
-            Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement psTm = connection.prepareStatement(SQL);
-            psTm.setObject(1,customer.getId());
-            psTm.setObject(2,customer.getTitle());
-            psTm.setObject(3,customer.getName());
-            psTm.setDate(4, Date.valueOf(customer.getDob()));
-            psTm.setDouble(5,customer.getSalary());
-            psTm.setObject(6,customer.getAddress());
-            psTm.setObject(7,customer.getCity());
-            psTm.setObject(8,customer.getProvince());
-            psTm.setObject(9,customer.getPostalCode());
-            return psTm.executeUpdate()>0;
+            return CrudUtil.execute(SQL,
+                    customer.getId(),
+                    customer.getTitle(),
+                    customer.getName(),
+                    customer.getDob(),
+                    customer.getSalary(),
+                    customer.getAddress(),
+                    customer.getCity(),
+                    customer.getProvince(),
+                    customer.getPostalCode()
+            );
         } catch (SQLException e) {
             new Alert(Alert.AlertType.ERROR,"Error : "+e.getMessage()).show();
         }
@@ -41,10 +39,9 @@ public class CustomerController implements CustomerService {
 
     @Override
     public boolean deleteCustomer(String id) {
-        String SQL = "DELETE FROM Customer WHERE CustID='" + id + "'";
+        String SQL = "DELETE FROM Customer WHERE CustID = ?";
         try {
-            Connection connection = DBConnection.getInstance().getConnection();
-            return connection.createStatement().executeUpdate(SQL)>0;
+            return CrudUtil.execute(SQL, id);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -53,14 +50,11 @@ public class CustomerController implements CustomerService {
     @Override
     public ObservableList<Customer> getAll() {
         ObservableList<Customer> customerObservableList = FXCollections.observableArrayList();
+        String SQL = "SELECT * FROM Customer";
         try {
-            String SQL = "SELECT * FROM Customer";
-            Connection connection = DBConnection.getInstance().getConnection();
-            PreparedStatement psTm = connection.prepareStatement(SQL);
-            ResultSet resultSet = psTm.executeQuery();
+            ResultSet resultSet = CrudUtil.execute(SQL);
             while (resultSet.next()){
-                System.out.println(resultSet.getString("CustTitle")+resultSet.getString("CustName"));
-                Customer customer =new Customer(
+                customerObservableList.add(new Customer(
                         resultSet.getString("CustID"),
                         resultSet.getString("CustTitle"),
                         resultSet.getString("CustName"),
@@ -70,9 +64,7 @@ public class CustomerController implements CustomerService {
                         resultSet.getString("City"),
                         resultSet.getString("Province"),
                         resultSet.getString("postalCode")
-                );
-                customerObservableList.add(customer);
-                System.out.println(customer);
+                ));
             }
             return customerObservableList;
         } catch (SQLException e) {
@@ -82,7 +74,22 @@ public class CustomerController implements CustomerService {
 
     @Override
     public boolean updateCustomer(Customer customer) {
-        return false;
+        String SQL = "UPDATE Customer SET CustTitle = ?, CustName = ?, DOB = ?, salary = ?, CustAddress = ?, City = ?, Province = ?, postalCode = ? WHERE CustID = ?";
+        try {
+            return CrudUtil.execute(SQL,
+                    customer.getTitle(),
+                    customer.getName(),
+                    customer.getDob(),
+                    customer.getSalary(),
+                    customer.getAddress(),
+                    customer.getCity(),
+                    customer.getProvince(),
+                    customer.getPostalCode(),
+                    customer.getId()
+            );
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -113,9 +120,7 @@ public class CustomerController implements CustomerService {
     public ObservableList<String> getCustomerIds() {
         ObservableList<String> customerIds = FXCollections.observableArrayList();
         ObservableList<Customer> customerObservableList = getAll();
-        customerObservableList.forEach(customer -> {
-            customerIds.add(customer.getId());
-        });
+        customerObservableList.forEach(customer -> customerIds.add(customer.getId()));
         return customerIds;
     }
 }

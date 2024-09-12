@@ -150,12 +150,29 @@ public class ViewFormController implements Initializable {
 
     @FXML
     void btnSearchOnAction() {
-
+        Customer customer = service.searchCustomer(txtId.getText());
+        setTextToValues(customer);
     }
 
     @FXML
     void btnUpdateOnAction() {
-
+        Customer customer = new Customer(
+                txtId.getText(),
+                cmbTitle.getValue(),
+                txtName.getText(),
+                dateDob.getValue(),
+                Double.parseDouble(txtSalary.getText()),
+                txtAddress.getText(),
+                txtCity.getText(),
+                txtProvince.getText(),
+                txtPostalCode.getText()
+        );
+        if (service.updateCustomer(customer)) {
+            new Alert(Alert.AlertType.INFORMATION,"Customer Update Successful !!").show();
+        }else{
+            new Alert(Alert.AlertType.ERROR,"Customer Not updates :(").show();
+        }
+        loadTable();
     }
 
     private void loadTable(){
