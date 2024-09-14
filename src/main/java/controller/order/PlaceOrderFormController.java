@@ -60,8 +60,8 @@ public class PlaceOrderFormController implements Initializable {
     @FXML
     private Label lblNetTotal;
 
-    @FXML
-    private Label lblOrderID;
+    //@FXML
+    //private Label lblOrderID;
 
     @FXML
     private Label lblTime;
