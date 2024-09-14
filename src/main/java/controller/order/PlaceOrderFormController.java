@@ -17,18 +17,22 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
-import model.CartTM;
-import model.Customer;
-import model.Item;
+import model.*;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class PlaceOrderFormController implements Initializable {
 
+    @FXML
+    public JFXTextField txtOrderId;
     @FXML
     private JFXComboBox<String> cmbCustomerID;
 
@@ -175,6 +179,19 @@ public class PlaceOrderFormController implements Initializable {
 
     @FXML
     void btnPlaceOrderOnAction() {
+        String orderId = txtOrderId.getText();
+        LocalDate orderDate = LocalDate.now();
+        String customerId = cmbCustomerID.getValue();
 
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        cartTM.forEach(obj-> orderDetails.add(new OrderDetail(orderId, obj.getItemCode(), obj.getQty(), 0.0)));
+
+        Order order = new Order(orderId, orderDate, customerId, orderDetails);
+        try {
+            new OrderController().placeOrder(order);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println(order);
     }
 }

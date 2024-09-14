@@ -23,11 +23,6 @@
             <Font name="System Bold" size="13.0" />
          </font>
       </Label>
-      <Label fx:id="lblOrderID" layoutX="177.0" layoutY="91.0" text="O001">
-         <font>
-            <Font name="System Bold" size="13.0" />
-         </font>
-      </Label>
       <Label layoutX="286.0" layoutY="91.0" text="Date :">
          <font>
             <Font name="System Bold" size="13.0" />
@@ -69,5 +64,6 @@
       <JFXButton layoutX="509.0" layoutY="510.0" onAction="#btnPlaceOrderOnAction" prefHeight="26.0" prefWidth="102.0" style="-fx-background-color: #44bd32;" text="Place Order" textFill="WHITE" />
       <Label layoutX="65.0" layoutY="515.0" text="Net Total : " textFill="RED" />
       <Label fx:id="lblNetTotal" layoutX="124.0" layoutY="515.0" text="0000" textFill="RED" />
+      <JFXTextField fx:id="txtOrderId" layoutX="181.0" layoutY="87.0" prefHeight="26.0" prefWidth="70.0" />
    </children>
 </AnchorPane>
