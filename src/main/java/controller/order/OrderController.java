@@ -1,15 +1,20 @@
 package controller.order;
 
-import controller.item.ItemController;
 import db.DBConnection;
 import javafx.scene.control.Alert;
 import model.Order;
+import service.ServiceFactory;
+import service.custom.ItemService;
+import util.ServiceType;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class OrderController {
+
+    ItemService itemService = ServiceFactory.getInstance().getServiceType(ServiceType.ITEM);
+
     public void placeOrder(Order order) throws SQLException {
         Connection connection = DBConnection.getInstance().getConnection();
         try {
@@ -23,7 +28,7 @@ public class OrderController {
             if (isOrderAdd) {
                 boolean isOrderDetailAdd = new OrderDetailController().addOrderDetail(order.getOrderDetails());
                 if (isOrderDetailAdd) {
-                    boolean isUpdateStock = ItemController.getInstance().updateStock(order.getOrderDetails());
+                    boolean isUpdateStock = itemService.updateStock(order.getOrderDetails());
                     if (isUpdateStock) {
                         connection.commit();
                         new Alert(Alert.AlertType.INFORMATION,"Order Placed !!").show();

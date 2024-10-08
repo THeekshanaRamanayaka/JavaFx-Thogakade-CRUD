@@ -2,6 +2,7 @@ package controller.customer;
 
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import entity.CustomerEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -12,6 +13,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Customer;
+import service.ServiceFactory;
+import service.custom.CustomerService;
+import util.ServiceType;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -52,7 +56,7 @@ public class ViewFormController implements Initializable {
     private DatePicker dateDob;
 
     @FXML
-    private TableView<Customer> tblResult;
+    private TableView<CustomerEntity> tblResult;
 
     @FXML
     private JFXTextField txtAddress;
@@ -75,7 +79,7 @@ public class ViewFormController implements Initializable {
     @FXML
     private JFXTextField txtSalary;
 
-    CustomerService service = CustomerController.getInstance();
+    CustomerService customerService = ServiceFactory.getInstance().getServiceType(ServiceType.CUSTOMER);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -101,7 +105,7 @@ public class ViewFormController implements Initializable {
         loadTable();
     }
 
-    private void setTextToValues(Customer newValue) {
+    private void setTextToValues(CustomerEntity newValue) {
         txtId.setText(newValue.getId());
         cmbTitle.setAccessibleText(newValue.getTitle());
         txtName.setText(newValue.getName());
@@ -130,7 +134,7 @@ public class ViewFormController implements Initializable {
                 txtCity.getText(),txtProvince.getText(),
                 txtPostalCode.getText()
         );
-        if(service.addCustomer(customer)){
+        if(customerService.addCustomer(customer)){
             new Alert(Alert.AlertType.INFORMATION,"Customer Added Successful !!").show();
         }else{
             new Alert(Alert.AlertType.ERROR,"Customer Not Added :(").show();
@@ -140,7 +144,7 @@ public class ViewFormController implements Initializable {
 
     @FXML
     void btnDeleteOnAction() {
-        if (service.deleteCustomer(txtId.getText())){
+        if (customerService.deleteCustomer(txtId.getText())){
             new Alert(Alert.AlertType.INFORMATION,"Customer deleted successfully !!").show();
         }else{
             new Alert(Alert.AlertType.ERROR).show();
@@ -149,8 +153,8 @@ public class ViewFormController implements Initializable {
     }
 
     @FXML
-    void btnSearchOnAction() {
-        Customer customer = service.searchCustomer(txtId.getText());
+    void btnSearchOnAction()    {
+        CustomerEntity customer = customerService.searchCustomer(txtId.getText());
         setTextToValues(customer);
     }
 
@@ -167,7 +171,7 @@ public class ViewFormController implements Initializable {
                 txtProvince.getText(),
                 txtPostalCode.getText()
         );
-        if (service.updateCustomer(customer)) {
+        if (customerService.updateCustomer(customer)) {
             new Alert(Alert.AlertType.INFORMATION,"Customer Update Successful !!").show();
         }else{
             new Alert(Alert.AlertType.ERROR,"Customer Not updates :(").show();
@@ -176,7 +180,7 @@ public class ViewFormController implements Initializable {
     }
 
     private void loadTable(){
-        ObservableList<Customer> customerObservableList = service.getAll();
+        ObservableList<CustomerEntity> customerObservableList = customerService.getAll();
         tblResult.setItems(customerObservableList);
     }
 }

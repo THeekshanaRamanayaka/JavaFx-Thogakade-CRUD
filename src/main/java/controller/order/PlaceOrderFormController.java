@@ -2,8 +2,8 @@ package controller.order;
 
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-import controller.customer.CustomerController;
-import controller.item.ItemController;
+import entity.CustomerEntity;
+import entity.ItemEntity;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -18,6 +18,10 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Duration;
 import model.*;
+import service.ServiceFactory;
+import service.custom.CustomerService;
+import service.custom.ItemService;
+import util.ServiceType;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -88,6 +92,8 @@ public class PlaceOrderFormController implements Initializable {
     private JFXTextField txtItemUnitPrice;
 
     ObservableList<CartTM> cartTM = FXCollections.observableArrayList();
+    CustomerService customerService = ServiceFactory.getInstance().getServiceType(ServiceType.CUSTOMER);
+    ItemService itemService = ServiceFactory.getInstance().getServiceType(ServiceType.ITEM);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -125,21 +131,21 @@ public class PlaceOrderFormController implements Initializable {
     }
 
     private void loadCustomerIds() {
-        cmbCustomerID.setItems(CustomerController.getInstance().getCustomerIds());
+        cmbCustomerID.setItems(customerService.getCustomerIds());
     }
 
     private void searchCustomer(String customerID) {
-        Customer customer = CustomerController.getInstance().searchCustomer(customerID);
+        CustomerEntity customer = customerService.searchCustomer(customerID);
         txtCustomerName.setText(customer.getName());
         txtCustomerAddress.setText(customer.getAddress());
     }
 
     private void loadItemCodes() {
-        cmbItemCode.setItems(ItemController.getInstance().getItemCodes());
+        cmbItemCode.setItems(itemService.getItemCodes());
     }
 
     private void searchItem(String itemCode) {
-        Item item = ItemController.getInstance().searchItem(itemCode);
+        ItemEntity item = itemService.searchItem(itemCode);
         txtItemDescription.setText(item.getDescription());
         txtItemStock.setText(item.getQtyOnHand());
         txtItemUnitPrice.setText(String.valueOf(item.getUnitPrice()));

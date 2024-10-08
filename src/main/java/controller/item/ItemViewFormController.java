@@ -1,6 +1,7 @@
 package controller.item;
 
 import com.jfoenix.controls.JFXTextField;
+import entity.ItemEntity;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -9,6 +10,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Item;
+import service.ServiceFactory;
+import service.custom.ItemService;
+import util.ServiceType;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -31,7 +35,7 @@ public class ItemViewFormController implements Initializable {
     private TableColumn<?, ?> colUnitPrice;
 
     @FXML
-    private TableView<Item> tblViewItemForm;
+    private TableView<ItemEntity> tblViewItemForm;
 
     @FXML
     private JFXTextField txtDescription;
@@ -48,7 +52,7 @@ public class ItemViewFormController implements Initializable {
     @FXML
     private JFXTextField txtUnitPrice;
 
-    ItemService service = ItemController.getInstance();
+    ItemService itemService = ServiceFactory.getInstance().getServiceType(ServiceType.ITEM);
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -65,12 +69,17 @@ public class ItemViewFormController implements Initializable {
         loadTable();
     }
 
-    private void setTextToValues(Item newValue) {
+    private void setTextToValues(ItemEntity newValue) {
         txtItemCode.setText(newValue.getItemCode());
         txtDescription.setText(newValue.getDescription());
         txtPackSize.setText(newValue.getPackSize());
         txtUnitPrice.setText(String.valueOf(newValue.getUnitPrice()));
         txtQtyOnHand.setText(newValue.getQtyOnHand());
+    }
+
+    @FXML
+    void btnReloadOnAction() {
+        loadTable();
     }
 
     @FXML
@@ -82,7 +91,7 @@ public class ItemViewFormController implements Initializable {
                 Double.parseDouble(txtUnitPrice.getText()),
                 txtQtyOnHand.getText()
         );
-        if (service.addItem(item)) {
+        if (itemService.addItem(item)) {
             new Alert(Alert.AlertType.INFORMATION,"Item Added Successful !!").show();
         }else{
             new Alert(Alert.AlertType.ERROR,"Item Not Added :(").show();
@@ -92,7 +101,7 @@ public class ItemViewFormController implements Initializable {
 
     @FXML
     void btnDeleteOnAction() {
-        if (service.deleteItem(txtItemCode.getText())){
+        if (itemService.deleteItem(txtItemCode.getText())){
             new Alert(Alert.AlertType.INFORMATION,"Item deleted successfully !!").show();
         }else{
             new Alert(Alert.AlertType.ERROR).show();
@@ -101,13 +110,8 @@ public class ItemViewFormController implements Initializable {
     }
 
     @FXML
-    void btnReloadOnAction() {
-        loadTable();
-    }
-
-    @FXML
     void btnSearchOnAction() {
-        Item item = service.searchItem(txtItemCode.getText());
+        ItemEntity item = itemService.searchItem(txtItemCode.getText());
         setTextToValues(item);
     }
 
@@ -120,7 +124,7 @@ public class ItemViewFormController implements Initializable {
                 Double.parseDouble(txtUnitPrice.getText()),
                 txtQtyOnHand.getText()
         );
-        if (service.updateItem(item)) {
+        if (itemService.updateItem(item)) {
             new Alert(Alert.AlertType.INFORMATION,"Item Update Successful !!").show();
         }else{
             new Alert(Alert.AlertType.ERROR,"Item Not updated :(").show();
@@ -129,7 +133,7 @@ public class ItemViewFormController implements Initializable {
     }
 
     private void loadTable(){
-        ObservableList<Item> itemObservableList = service.getAll();
+        ObservableList<ItemEntity> itemObservableList = itemService.getAll();
         tblViewItemForm.setItems(itemObservableList);
     }
 }

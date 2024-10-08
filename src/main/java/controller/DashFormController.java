@@ -13,7 +13,7 @@ public class DashFormController {
     void btnViewCustomerFormOnAction() {
         Stage stage = new Stage();
         try {
-            stage.setScene(new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../view/view_customer_form.fxml")))));
+            stage.setScene(new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/view_customer_form.fxml")))));
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -24,7 +24,7 @@ public class DashFormController {
     public void btnViewItemFormOnAction() {
         Stage stage = new Stage();
         try {
-            stage.setScene(new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../view/view_item_form.fxml")))));
+            stage.setScene(new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/view_item_form.fxml")))));
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -35,7 +35,7 @@ public class DashFormController {
     public void btnPlaceOrderFormOnAction() {
         Stage stage = new Stage();
         try {
-            stage.setScene(new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("../view/place_order_form.fxml")))));
+            stage.setScene(new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/view/place_order_form.fxml")))));
             stage.show();
         } catch (IOException e) {
             throw new RuntimeException(e);

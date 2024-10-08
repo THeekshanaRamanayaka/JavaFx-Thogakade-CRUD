@@ -1,26 +1,20 @@
-package controller.item;
+package repository.custom.impl;
 
+import entity.ItemEntity;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import model.Item;
-import model.OrderDetail;
+import repository.custom.ItemDao;
 import util.CrudUtil;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
 
-public class ItemController implements ItemService {
-
-    private static ItemController instance;
-    private ItemController() {}
-    public static ItemController getInstance() {
-        return instance == null ? instance = new ItemController() : instance;
-    }
+public class ItemDaoImpl implements ItemDao {
 
     @Override
-    public boolean addItem(Item item) {
+    public boolean save(ItemEntity item) {
         String SQL ="INSERT INTO Item VALUES(?,?,?,?,?)";
         try {
             return CrudUtil.execute(SQL,
@@ -37,38 +31,37 @@ public class ItemController implements ItemService {
     }
 
     @Override
-    public boolean deleteItem(String itemCode) {
+    public boolean delete(String id) {
         String SQL = "DELETE FROM Item WHERE ItemCode=?";
         try {
-            return CrudUtil.execute(SQL, itemCode);
+            return CrudUtil.execute(SQL, id);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
-    public ObservableList<Item> getAll() {
-        ObservableList<Item> itemObservableList = FXCollections.observableArrayList();
-        String SQL = "SELECT * FROM Item";
+    public ItemEntity search(String id) {
+        String SQL = "SELECT * FROM Item WHERE ItemCode = ?";
         try {
-            ResultSet resultSet = CrudUtil.execute(SQL);
-            while (resultSet.next()){
-                itemObservableList.add(new Item(
+            ResultSet resultSet = CrudUtil.execute(SQL, id);
+            if (resultSet.next()) {
+                return new ItemEntity(
                         resultSet.getString("ItemCode"),
                         resultSet.getString("Description"),
                         resultSet.getString("PackSize"),
                         resultSet.getDouble("UnitPrice"),
                         resultSet.getString("QtyOnHand")
-                ));
+                );
             }
-            return itemObservableList;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return null;
     }
 
     @Override
-    public boolean updateItem(Item item) {
+    public boolean update(ItemEntity item) {
         String SQL = "UPDATE Item SET Description = ?, PackSize = ?, UnitPrice = ?, QtyOnHand = ? WHERE ItemCode = ?";
         try {
             return CrudUtil.execute(SQL,
@@ -84,48 +77,21 @@ public class ItemController implements ItemService {
     }
 
     @Override
-    public Item searchItem(String itemCode) {
-        String SQL = "SELECT * FROM Item WHERE ItemCode = ?";
+    public ObservableList<ItemEntity> getAll() {
+        ObservableList<ItemEntity> itemObservableList = FXCollections.observableArrayList();
+        String SQL = "SELECT * FROM Item";
         try {
-            ResultSet resultSet = CrudUtil.execute(SQL, itemCode);
-            if (resultSet.next()) {
-                return new Item(
+            ResultSet resultSet = CrudUtil.execute(SQL);
+            while (resultSet.next()){
+                itemObservableList.add(new ItemEntity(
                         resultSet.getString("ItemCode"),
                         resultSet.getString("Description"),
                         resultSet.getString("PackSize"),
                         resultSet.getDouble("UnitPrice"),
                         resultSet.getString("QtyOnHand")
-                );
+                ));
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
-
-    @Override
-    public ObservableList<String> getItemCodes() {
-        ObservableList<String> itemCodes = FXCollections.observableArrayList();
-        ObservableList<Item> itemObservableList = getAll();
-        itemObservableList.forEach(item -> itemCodes.add(item.getItemCode()));
-        return itemCodes;
-    }
-
-    @Override
-    public boolean updateStock(List<OrderDetail> orderDetails) {
-        for (OrderDetail orderDetail : orderDetails) {
-            boolean updateStock = updateStock(orderDetail);
-            if (!updateStock) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public boolean updateStock(OrderDetail orderDetail) {
-        String SQL = "UPDATE Item SET QtyOnHand = QtyOnHand - ? WHERE ItemCode = ?";
-        try {
-            return CrudUtil.execute(SQL,orderDetail.getQty(),orderDetail.getItemCode());
+            return itemObservableList;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
